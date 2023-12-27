@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
 	"process_id" : 4234,
+=======
+	"process_id" : 7965,
+>>>>>>> main
 	"version" : "2022.3.15f1",
 	"app_path" : "/Applications/Unity/Hub/Editor/2022.3.15f1/Unity.app",
 	"app_contents_path" : "/Applications/Unity/Hub/Editor/2022.3.15f1/Unity.app/Contents"
