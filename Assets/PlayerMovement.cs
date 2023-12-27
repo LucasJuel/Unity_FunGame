@@ -1,23 +1,24 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using JetBrains.Annotations;
 using UnityEngine;
-
 public class PlayerMovement : MonoBehaviour
 {
     CharacterController controller;
     public Vector3 playerVelocity;
-    public  bool playerIsGrounded;
+    private bool playerIsGrounded;
     public float playerSpeed = 2.0f;
     public float jumpHeight = 1.0f;
     public float gravityValue = -9.81f;
-
     public float rotationX;
     public float mouseY;
-
-    public float lookSpeed = 2.0f;
-
-    public float jumpMultiplier;
+    Vector3 moveDirection;
+    private float lookSpeed = 2.0f;
+    private bool canMove = true;
     public Camera playerCam;
+
+    public BoxCollider boxCol;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,37 +27,51 @@ public class PlayerMovement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-        playerIsGrounded = controller.isGrounded; 
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
-        if(playerIsGrounded){
+        if(playerIsGrounded && playerVelocity.y < 0){
             playerVelocity.y = 0f;
         }
 
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        controller.Move(move * Time.deltaTime * playerSpeed);
+        if(canMove){
+            moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+            //print(moveDirection);
+            controller.Move(moveDirection * Time.deltaTime * playerSpeed);
+        }
     
-
         if(Input.GetButtonDown("Jump") && playerIsGrounded){
-            playerVelocity.y += jumpHeight * -jumpMultiplier * gravityValue;
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
-        if(!playerIsGrounded){
-            playerVelocity.y += gravityValue * Time.deltaTime;
-        }
+        
+        playerVelocity.y += gravityValue * Time.deltaTime;
+
 
         rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
         rotationX = Mathf.Clamp(rotationX, -45.0f, 45.0f);
         playerCam.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
         transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
-
         controller.Move(playerVelocity * Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
-    private void OnTriggerEnter(Collider other){
-        if(other.tag == "Ground"){
-            print("Im Grounded");
+    void OnTriggerStay(Collider col){
+        if(col.CompareTag("Ground")){
+            print("Im colliding");
+            playerIsGrounded = true;
+        }else{
+            playerIsGrounded = false;
         }
+        
     }
 }

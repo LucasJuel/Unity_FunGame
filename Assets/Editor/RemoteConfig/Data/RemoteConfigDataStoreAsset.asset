@@ -14,4 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rsKeyList: '[]'
   _rsLastCachedKeyList: '[]'
-  _environments: '[]'
+  _environments: "[\n  {\n    \"projectId\": \"bcfdc4d5-d71f-40d5-9112-6a62a330e677\",\n   
+    \"name\": \"production\",\n    \"id\": \"faac6565-6490-452b-8b0a-a97d6c35e231\",\n   
+    \"isDefault\": true,\n    \"createdAt\": \"2023-12-21T10:23:46Z\",\n    \"updatedAt\":
+    \"2023-12-21T10:23:46Z\"\n  }\n]"
